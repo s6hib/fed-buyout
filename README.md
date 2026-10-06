@@ -11,7 +11,7 @@ handful of agencies, and it took a lot of institutional memory with it.
 
 ## What the data shows
 
-**140,481 people** left under the deferred resignation program between January
+140,481 people left under the deferred resignation program between January
 2025 and July 2026. That is 6.1 percent of the January 2025 workforce. Nearly
 all of them, 96,401, came off the rolls in September 2025, when the paid
 period ended. A second, smaller wave of about 29,000 followed in December 2025
@@ -25,20 +25,20 @@ half of that.
 
 ![headcount by month](output/headcount_by_month.png)
 
-**It skewed old.** Employees 60 and over were 15 percent of the workforce and
+It skewed old. Employees 60 and over were 15 percent of the workforce and
 35 percent of buyout leavers. People aged 35 to 49, the middle of a federal
 career, took it at about half the rate their numbers would predict.
 
 ![by age](output/buyout_by_age.png)
 
-**It skewed experienced.** Staff with 30 or more years of service were 6
+It skewed experienced. Staff with 30 or more years of service were 6
 percent of the workforce and 18 percent of leavers, three times their share.
 Added up, the people who took the buyout had 2.26 million years of federal
 service between them. The median leaver had 14.3 years in.
 
 ![by service](output/buyout_by_service.png)
 
-**A few agencies carried most of it.** GSA lost 32 percent of its January 2025
+A few agencies carried most of it. GSA lost 32 percent of its January 2025
 headcount to the buyout alone. HUD lost 26 percent, Treasury 20 percent
 (23,264 people), SBA and NASA 19 percent each. The military departments were
 at 6 to 7 percent. DHS and Justice were at 2 and 3 percent.
@@ -50,14 +50,14 @@ January 2025, GSA 38 percent and HUD 33 percent.
 
 ![agency change](output/agency_change.png)
 
-**STEM workers left at a higher rate than everyone else.** They were 17 percent
+STEM workers left at a higher rate than everyone else. They were 17 percent
 of the workforce and 23 percent of leavers. Health occupations, which are
 mostly at the VA, barely moved: 10 percent of the workforce, under 1 percent of
 leavers.
 
 ![by stem](output/buyout_by_stem.png)
 
-**Pay tells less of a story.** Leavers look a little like the workforce as a
+Pay tells less of a story. Leavers look a little like the workforce as a
 whole, with a slight tilt toward the lowest and highest bands. Pay is redacted
 on 45 percent of buyout records, so this one is read with less confidence than
 the others.
