@@ -37,7 +37,7 @@ def month_label(m):
 def tidy(name):
     """Shorten the official agency names so they fit on a y axis."""
     name = name.title()
-    for a, b in [("Department Of ", ""), ("Nat Aeronautics And Space Administration", "NASA"),
+    for a, b in [("Department Of The ", ""), ("Department Of ", ""), ("Nat Aeronautics And Space Administration", "NASA"),
                  ("Housing And Urban Developm", "HUD"), ("Environmental Protection Agency", "EPA"),
                  ("General Services Administration", "GSA"), ("Small Business Administration", "SBA"),
                  ("Health And Human Services", "HHS"), ("Social Security Administration", "SSA"),
@@ -61,7 +61,7 @@ def chart_headcount():
         ax.spines[s].set_visible(False)
     first, last = df.iloc[0], df.iloc[-1]
     ax.annotate(f"{first.headcount/1e6:.2f}M", (0, first.headcount / 1e6), xytext=(6, 8), textcoords="offset points")
-    ax.annotate(f"{last.headcount/1e6:.2f}M", (len(df) - 1, last.headcount / 1e6), xytext=(-30, -16), textcoords="offset points")
+    ax.annotate(f"{last.headcount/1e6:.2f}M", (len(df) - 1, last.headcount / 1e6), xytext=(-34, 8), textcoords="offset points")
     save(fig, "headcount_by_month")
 
 
@@ -74,7 +74,8 @@ def chart_agency_change(min_size=5000, n=15):
     ax.set_xlabel("% change in headcount, Jan 2025 to Jul 2026")
     ax.set_title(f"Biggest cuts by agency (agencies with {min_size:,}+ staff)", loc="left", fontweight="bold")
     for i, v in enumerate(df["pct_change"]):
-        ax.text(v - 0.5, i, f"{v:.0f}%", va="center", ha="right", color="white", fontsize=9)
+        ax.text(v - 0.4, i, f"{v:.0f}%", va="center", ha="right", fontsize=9)
+    ax.set_xlim(df["pct_change"].min() * 1.12, 0)
     ax.grid(axis="x", alpha=0.3)
     for s in ["top", "right"]:
         ax.spines[s].set_visible(False)
@@ -115,6 +116,13 @@ def chart_buyout_by_agency(min_size=5000, n=15):
     save(fig, "buyout_by_agency")
 
 
+def short_label(v):
+    v = str(v)
+    fixes = {"LESS THAN 20": "<20", "65 OR MORE": "65+", "ALL OTHER OCCUPATIONS": "Everything else",
+             "STEM OCCUPATIONS": "STEM", "HEALTH OCCUPATIONS": "Health", "UNSPECIFIED": "Unspecified"}
+    return fixes.get(v, v.title() if len(v) > 6 else v)
+
+
 def chart_share(name, col, title, xlabel=None):
     """Side by side bars: share of buyout leavers vs share of the Jan 2025 workforce."""
     df = load(name)
@@ -124,7 +132,7 @@ def chart_share(name, col, title, xlabel=None):
     ax.bar([i - w / 2 for i in x], df["workforce_share"], w, color=GRAY, label="whole workforce, Jan 2025")
     ax.bar([i + w / 2 for i in x], df["buyout_share"], w, color=ORANGE, label="took the buyout")
     ax.set_xticks(list(x))
-    ax.set_xticklabels([str(v).title() if isinstance(v, str) and len(v) > 6 else str(v) for v in df[col]], rotation=0)
+    ax.set_xticklabels([short_label(v) for v in df[col]], rotation=0)
     ax.set_ylabel("share of group (%)")
     if xlabel:
         ax.set_xlabel(xlabel)
