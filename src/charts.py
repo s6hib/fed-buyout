@@ -120,7 +120,7 @@ def short_label(v):
     v = str(v)
     fixes = {"LESS THAN 20": "<20", "65 OR MORE": "65+", "ALL OTHER OCCUPATIONS": "Everything else",
              "STEM OCCUPATIONS": "STEM", "HEALTH OCCUPATIONS": "Health", "UNSPECIFIED": "Unspecified"}
-    return fixes.get(v, v.title() if len(v) > 6 else v)
+    return fixes.get(v, v.title() if v.isalpha() else v)
 
 
 def chart_share(name, col, title, xlabel=None):
