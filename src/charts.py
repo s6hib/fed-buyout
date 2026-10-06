@@ -144,7 +144,7 @@ def main():
     chart_share("buyout_by_age", "age_bracket", "Who took it: age", "age bracket")
     chart_share("buyout_by_service", "service_bucket", "Who took it: years of federal service", "years of service")
     chart_share("buyout_by_pay", "pay_band", "Who took it: salary", "annual basic pay")
-    chart_share("buyout_by_occupation", "occupational_category", "Who took it: job category")
+    chart_share("buyout_by_stem", "stem_occupation", "Who took it: STEM, health, everyone else")
     print("charts written to", os.path.abspath(OUT))
 
 

@@ -17,13 +17,15 @@ HERE = os.path.dirname(__file__)
 RAW = os.path.join(HERE, "..", "data", "raw")
 OUT = os.path.join(HERE, "..", "output")
 
+# occupational_category is blank on most deferred resignation records, so the
+# STEM/health flag (derived from the occupational series) stands in for it.
+
 BASELINE = "202501"  # last snapshot before the deferred resignation offer
 LATEST = "202607"
 
 # columns we actually use, so the big employment files load faster
 EMP_COLS = [
-    "agency", "age_bracket", "length_of_service_years", "occupational_category",
-    "stem_occupation", "annualized_adjusted_basic_pay", "supervisory_status",
+    "agency", "age_bracket", "length_of_service_years", "stem_occupation", "annualized_adjusted_basic_pay", "supervisory_status",
     "duty_station_state",
 ]
 SEP_COLS = EMP_COLS + ["separation_category", "drp_indicator",
@@ -43,8 +45,17 @@ def month_of(path):
     return os.path.basename(path).split("_")[1].split(".")[0]
 
 
+def to_numeric(df):
+    """Service years and pay arrive as strings, and pay is 'REDACTED' for some
+    agencies (mostly defense and law enforcement). Both become floats with NaN
+    where there was no usable value."""
+    for c in ["length_of_service_years", "annualized_adjusted_basic_pay"]:
+        df[c] = pd.to_numeric(df[c], errors="coerce")
+    return df
+
+
 def load_employment(month, cols=EMP_COLS):
-    return pd.read_parquet(os.path.join(RAW, f"employment_{month}.parquet"), columns=cols)
+    return to_numeric(pd.read_parquet(os.path.join(RAW, f"employment_{month}.parquet"), columns=cols))
 
 
 def load_separations():
@@ -53,7 +64,7 @@ def load_separations():
         df = pd.read_parquet(path, columns=SEP_COLS)
         df["file_month"] = month_of(path)
         frames.append(df)
-    sep = pd.concat(frames, ignore_index=True)
+    sep = to_numeric(pd.concat(frames, ignore_index=True))
     sep["drp"] = sep["drp_indicator"].eq("Y")
     return sep
 
@@ -125,6 +136,7 @@ def tenure_lost(sep):
     yrs = took["length_of_service_years"].dropna()
     return pd.DataFrame([{
         "buyout_leavers": len(took),
+        "pay_redacted_pct": round(float(took["annualized_adjusted_basic_pay"].isna().mean() * 100), 1),
         "total_service_years": int(yrs.sum()),
         "median_service_years": float(yrs.median()),
         "mean_service_years": round(float(yrs.mean()), 1),
@@ -151,7 +163,6 @@ def main():
         "buyout_by_agency": buyout_by_agency(sep, base),
         "buyout_by_age": share_table(sep, base, "age_bracket", AGE_ORDER),
         "buyout_by_service": share_table(sep, base, "service_bucket", SERVICE_LABELS),
-        "buyout_by_occupation": share_table(sep, base, "occupational_category"),
         "buyout_by_stem": share_table(sep, base, "stem_occupation"),
         "buyout_by_pay": share_table(sep, base, "pay_band", PAY_LABELS),
         "tenure_lost": tenure_lost(sep),
